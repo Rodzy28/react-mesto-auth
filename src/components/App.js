@@ -157,12 +157,12 @@ export default function App() {
             isLoading={isLoading}
           />
 
-          <PopupWithForm
+          {/* <PopupWithForm
             name="confirm"
             title="Вы уверены?"
             ariaLabel="Закрыть окно подтверждения удаления"
             buttonText="Да"
-          />
+          /> */}
 
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}

@@ -1,6 +1,6 @@
 // import { useState } from "react";
 
-// // "Можно лучше от ревью"
+// // "Можно лучше" от ревью. Разобраться!
 // export function useForm(inputValues = {}) {
 //   const [values, setValues] = useState(inputValues);
 
