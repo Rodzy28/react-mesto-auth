@@ -1,13 +1,18 @@
 import '../index.css';
 import Header from './Header';
-import Footer from './Footer';
 import Main from './Main';
+import Footer from './Footer';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import { useState, useEffect } from 'react';
+import ProtectedRoute from './ProtectedRoute';
+import Register from './Register';
+import Login from './Login';
 import api from '../utils/Api';
+import authApi from '../utils/AuthApi';
+import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 export default function App() {
@@ -18,6 +23,28 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleTokenCheck = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      authApi.checkToken(token)
+        .then((res) => {
+          if (res) {
+            setEmail(res.data.email);
+            setLoggedIn(true);
+            navigate("/", { replace: true });
+          }
+        });
+    }
+  }
+
+  useEffect(() => {
+    handleTokenCheck();
+  }, [])
 
   // Вариант от Ревьювера "Можно лучше". Как сделать закрытие по Escape.
   // const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || selectedCard.link
@@ -126,20 +153,53 @@ export default function App() {
       });
   }
 
+  function handleRegister(data) {
+    authApi.registration(data)
+      .then(() => {
+        navigate("/sign-in", { replace: true })
+      }).catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleLogin(data) {
+    authApi.login(data)
+      .then((res) => {
+        if (res) {
+          localStorage.setItem('token', res.token);
+          setLoggedIn(true);
+          navigate("/", { replace: true });
+        }
+      }).catch((err) => {
+        console.log(err);
+      });;
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
           <Header />
-          <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          />
+          <Routes>
+            <Route path="/sign-up" element={<Register handleRegister={handleRegister} />} />
+            <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
+            <Route path="/"
+              element={
+                <ProtectedRoute
+                  loggedIn={loggedIn}
+                  element={Main}
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+              }
+            />
+            <Route path="*" element={<h2>Страницы не существует!</h2>} />
+          </Routes>
           <Footer />
 
           <EditProfilePopup
@@ -155,7 +215,7 @@ export default function App() {
             onAddPlace={handleAddPlace}
             isLoading={isLoading}
           />
-
+          {/* Реализовать попап подтверждения удаления карточки */}
           {/* <PopupWithForm
             name="confirm"
             title="Вы уверены?"
