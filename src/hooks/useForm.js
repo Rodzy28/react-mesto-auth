@@ -1,12 +1,12 @@
-// import { useState } from "react";
+import { useState } from "react";
 
-// // "Можно лучше" от ревью. Разобраться!
-// export function useForm(inputValues = {}) {
-//   const [values, setValues] = useState(inputValues);
+// "Можно лучше" от ревью. Реализовал в AddPlacaPopup
+export function useForm(inputValues = {}) {
+  const [values, setValues] = useState(inputValues);
 
-//   const handleChange = (event) => {
-//     const { value, name } = event.target;
-//     setValues({ ...values, [name]: value });
-//   };
-//   return { values, handleChange, setValues };
-// }
+  const handleChange = (event) => {
+    const { value, name } = event.target;
+    setValues({ ...values, [name]: value });
+  };
+  return { values, handleChange, setValues };
+}

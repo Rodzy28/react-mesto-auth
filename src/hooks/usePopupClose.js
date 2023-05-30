@@ -1,3 +1,4 @@
+// Можно лучше от Ревью. Закрытие попапов по Escape и клику мыши по Overlay.
 import { useEffect } from "react";
 // кастомные хуки всегда должны начинаться с глагола `use`, чтобы реакт понял, что это хук. Он следит за их вызовами
 export function usePopupClose(isOpen, closePopup) {
