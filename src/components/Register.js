@@ -16,12 +16,12 @@ export default function Register({ handleRegister }) {
   }, [setValues]);
 
   return (
-    <div>
-      <h2>Регистрация</h2>
-      <form onSubmit={handleSubmit}>
-        <input id="email" type="email" name="email" placeholder="Email" value={values.email || ''} onChange={handleChange} autoComplete="on" required />
-        <input id="password" type="password" name="password" placeholder="Пароль" value={values.password || ''} onChange={handleChange} minLength="5" maxLength="15" autoComplete="on" required />
-        <button type="submit">Кнопка Зарегистрироваться</button>
+    <div className="auth">
+      <h2 className="auth__title">Регистрация</h2>
+      <form onSubmit={handleSubmit} className="auth__form">
+        <input id="email" className="auth__input" type="email" name="email" placeholder="Email" value={values.email || ''} onChange={handleChange} required />
+        <input id="password" className="auth__input" type="password" name="password" placeholder="Пароль" value={values.password || ''} onChange={handleChange} minLength="5" maxLength="15" required />
+        <button type="submit" className="auth__button">Зарегистрироваться</button>
       </form>
       <p>Уже зарегистрированны? <Link to="/sign-in">Войти</Link></p>
     </div>

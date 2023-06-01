@@ -7,7 +7,7 @@ export default function Login({ handleLogin }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    handleLogin({email: values.email, password: values.password});
+    handleLogin({ email: values.email, password: values.password });
   }
 
   useEffect(() => {
@@ -15,12 +15,12 @@ export default function Login({ handleLogin }) {
   }, [setValues]);
 
   return (
-    <div>
-      <h2>Вход</h2>
-      <form onSubmit={handleSubmit}>
-        <input id="email" type="email" name="email" placeholder="Email" value={values.email || ''} onChange={handleChange} autoComplete="on" required />
-        <input id="password" type="password" name="password" placeholder="Пароль" value={values.password || ''} onChange={handleChange} minLength="5" maxLength="15" autoComplete="on" required />
-        <button type="submit">Войти</button>
+    <div className="auth">
+      <h2 className="auth__title">Вход</h2>
+      <form onSubmit={handleSubmit} className="auth__form">
+        <input id="email" className="auth__input" type="email" name="email" placeholder="Email" value={values.email || ''} onChange={handleChange} required />
+        <input id="password" className="auth__input" type="password" name="password" placeholder="Пароль" value={values.password || ''} onChange={handleChange} minLength="5" maxLength="15" required />
+        <button type="submit" className="auth__button">Войти</button>
       </form>
     </div>
   )

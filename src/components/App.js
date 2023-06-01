@@ -28,23 +28,22 @@ export default function App() {
 
   const navigate = useNavigate();
 
-  const handleTokenCheck = () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      authApi.checkToken(token)
-        .then((res) => {
-          if (res) {
-            setEmail(res.data.email);
-            setLoggedIn(true);
-            navigate("/", { replace: true });
-          }
-        });
-    }
-  }
-
   useEffect(() => {
+    const handleTokenCheck = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        authApi.checkToken(token)
+          .then((res) => {
+            if (res) {
+              setEmail(res.data.email);
+              setLoggedIn(true);
+              navigate("/", { replace: true });
+            }
+          });
+      }
+    }
     handleTokenCheck();
-  }, [])
+  }, [navigate])
 
   // Вариант от Ревьювера "Можно лучше". Как сделать закрытие по Escape.
   // const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || selectedCard.link
@@ -175,11 +174,18 @@ export default function App() {
       });;
   }
 
+  function handleLogOut() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    setEmail("");
+    navigate("/sign-in", { replace: true });
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
-          <Header />
+          <Header userEmail={email} handleLogOut={handleLogOut} />
           <Routes>
             <Route path="/sign-up" element={<Register handleRegister={handleRegister} />} />
             <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
