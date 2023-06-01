@@ -23,7 +23,7 @@ export default function Register({ handleRegister }) {
         <input id="password" className="auth__input" type="password" name="password" placeholder="Пароль" value={values.password || ''} onChange={handleChange} minLength="5" maxLength="15" required />
         <button type="submit" className="auth__button">Зарегистрироваться</button>
       </form>
-      <p>Уже зарегистрированны? <Link to="/sign-in">Войти</Link></p>
+      <p className="auth__text">Уже зарегистрированны? <Link className="auth__link" to="/sign-in">Войти</Link></p>
     </div>
   )
 }

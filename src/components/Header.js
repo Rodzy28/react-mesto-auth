@@ -8,8 +8,8 @@ export default function Header({ userEmail, handleLogOut }) {
   return (
     <header className="header">
       <Link className="header__logo" to="#" title="Ссылка" />
-      {location.pathname === "/sign-in" && <Link to="/sign-up">Регистрация</Link>}
-      {location.pathname === "/sign-up" && <Link to="/sign-in">Вход</Link>}
+      {location.pathname === "/sign-in" && <Link to="/sign-up" className="header__link">Регистрация</Link>}
+      {location.pathname === "/sign-up" && <Link to="/sign-in" className="header__link">Вход</Link>}
       {location.pathname === "/" &&
         <>
           <p>{userEmail}</p>
