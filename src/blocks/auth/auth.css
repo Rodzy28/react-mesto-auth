@@ -3,4 +3,5 @@
   align-items: center;
   flex-direction: column;
   margin: auto;
+  min-height: calc(100vh - 262px);
 }

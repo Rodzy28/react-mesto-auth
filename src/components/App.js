@@ -9,6 +9,7 @@ import AddPlacePopup from './AddPlacePopup';
 import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
+import InfoTooltip from './InfoTooltip';
 import api from '../utils/Api';
 import authApi from '../utils/AuthApi';
 import { useState, useEffect } from 'react';
@@ -19,6 +20,8 @@ export default function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -62,14 +65,16 @@ export default function App() {
   // }, [isOpen]) 
 
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then((data) => {
         setCurrentUser(data[0]);
         setCards(data[1]);
       }).catch((err) => {
         console.log(err);
       });
-  }, []);
+    }
+  }, [loggedIn]);
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -88,6 +93,7 @@ export default function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setIsInfoTooltipPopupOpen(false);
     setSelectedCard({});
   }
 
@@ -155,8 +161,12 @@ export default function App() {
   function handleRegister(data) {
     authApi.registration(data)
       .then(() => {
+        setIsSuccess(true);
+        setIsInfoTooltipPopupOpen(true);
         navigate("/sign-in", { replace: true })
       }).catch((err) => {
+        setIsSuccess(false);
+        setIsInfoTooltipPopupOpen(true);
         console.log(err);
       });
   }
@@ -170,6 +180,8 @@ export default function App() {
           navigate("/", { replace: true });
         }
       }).catch((err) => {
+        setIsSuccess(false);
+        setIsInfoTooltipPopupOpen(true);
         console.log(err);
       });;
   }
@@ -204,7 +216,8 @@ export default function App() {
                 />
               }
             />
-            <Route path="*" element={<h2>Страницы не существует!</h2>} />
+            <Route path="*" element={loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" />}
+            />
           </Routes>
           <Footer />
 
@@ -234,6 +247,12 @@ export default function App() {
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
             isLoading={isLoading}
+          />
+
+          <InfoTooltip
+            isOpen={isInfoTooltipPopupOpen}
+            onClose={closeAllPopups}
+            isSuccess={isSuccess}
           />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
