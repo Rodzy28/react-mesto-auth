@@ -42,7 +42,8 @@ export default function App() {
               setLoggedIn(true);
               navigate("/", { replace: true });
             }
-          });
+          })
+          .catch(console.error);
       }
     }
     handleTokenCheck();
@@ -67,12 +68,11 @@ export default function App() {
   useEffect(() => {
     if (loggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then((data) => {
-        setCurrentUser(data[0]);
-        setCards(data[1]);
-      }).catch((err) => {
-        console.log(err);
-      });
+        .then(([userData, cards]) => {
+          setCurrentUser(userData);
+          setCards(cards);
+        })
+        .catch(console.error);
     }
   }, [loggedIn]);
 
@@ -104,9 +104,7 @@ export default function App() {
       .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(console.error);
   }
 
   function handleCardDelete(id) {
@@ -114,20 +112,18 @@ export default function App() {
       .then(() => {
         setCards((state) => state.filter((card) => card._id !== id));
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(console.error);
   }
 
   function handleUpdateUser(userData) {
     setIsLoading(true);
     api.setUserInfo(userData)
-      .then(data => {
-        setCurrentUser(data);
+      .then(userData => {
+        setCurrentUser(userData);
         closeAllPopups();
-      }).catch((err) => {
-        console.log(err);
-      }).finally(() => {
+      })
+      .catch(console.error)
+      .finally(() => {
         setIsLoading(false);
       });
   }
@@ -138,9 +134,9 @@ export default function App() {
       .then(avatar => {
         setCurrentUser(avatar);
         closeAllPopups();
-      }).catch((err) => {
-        console.log(err);
-      }).finally(() => {
+      })
+      .catch(console.error)
+      .finally(() => {
         setIsLoading(false);
       });
   }
@@ -151,9 +147,9 @@ export default function App() {
       .then(newCard => {
         setCards([newCard, ...cards]);
         closeAllPopups();
-      }).catch((err) => {
-        console.log(err);
-      }).finally(() => {
+      })
+      .catch(console.error)
+      .finally(() => {
         setIsLoading(false);
       });
   }
@@ -162,12 +158,14 @@ export default function App() {
     authApi.registration(data)
       .then(() => {
         setIsSuccess(true);
-        setIsInfoTooltipPopupOpen(true);
         navigate("/sign-in", { replace: true })
-      }).catch((err) => {
+      })
+      .catch((err) => {
         setIsSuccess(false);
-        setIsInfoTooltipPopupOpen(true);
         console.log(err);
+      })
+      .finally(() => {
+        setIsInfoTooltipPopupOpen(true);
       });
   }
 
@@ -179,11 +177,12 @@ export default function App() {
           setLoggedIn(true);
           navigate("/", { replace: true });
         }
-      }).catch((err) => {
+      })
+      .catch((err) => {
         setIsSuccess(false);
         setIsInfoTooltipPopupOpen(true);
         console.log(err);
-      });;
+      });
   }
 
   function handleLogOut() {

@@ -11,7 +11,7 @@ export default function Login({ handleLogin }) {
   }
 
   useEffect(() => {
-    setValues('');
+    setValues({});
   }, [setValues]);
 
   return (

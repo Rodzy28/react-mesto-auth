@@ -12,7 +12,7 @@ export default function Register({ handleRegister }) {
   }
 
   useEffect(() => {
-    setValues('');
+    setValues({});
   }, [setValues]);
 
   return (

@@ -12,7 +12,7 @@ export default function AddPlacePopup({ onAddPlace, isOpen, onClose, isLoading }
   }
 
   useEffect(() => {
-    setValues('');
+    setValues({});
   }, [isOpen, setValues]);
 
   return (
